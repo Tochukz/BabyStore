@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using BabyStore.DAL;
 using BabyStore.Models;
+using BabyStore.ViewModels;
 
 namespace BabyStore.Controllers
 {
@@ -16,14 +17,46 @@ namespace BabyStore.Controllers
         private StoreContext db = new StoreContext();
 
         // GET: Products
-        public ActionResult Index(string category)
-        {           
-            var products = db.Products.Include(p => p.Category);
+        public ActionResult Index(string category, string search)
+        {
+            ProductIndexViewModel viewModel = new ProductIndexViewModel();
+            var products = db.Products.Include(p => p.Category);                   
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                products = products.Where(p =>
+                    p.Name.Contains(search) ||
+                    p.Description.Contains(search) ||
+                    p.Category.Name.Contains(search)
+                );
+                //ViewBag.Search = search;
+                viewModel.Search = search;
+            }
+
+            //Group search reults iinto categories and count how many items in ech category.
+            viewModel.CatsWithCount = from matchingProducts in products
+                                      where
+                                      matchingProducts.CategoryID != null
+                                      group matchingProducts by
+                                      matchingProducts.Category.Name into
+                                      catGroup
+                                      select new CategoryWithCount()
+                                      {
+                                          CategoryName = catGroup.Key,
+                                          ProductCount = catGroup.Count()
+                                      };
+            //var categories = products.OrderBy(p => p.Category.Name).Select(p => p.Category.Name).Distinct();
+
             if (!String.IsNullOrEmpty(category))
             {
                 products = products.Where(p => p.Category.Name == category);
             }
-            return View(products.ToList());
+
+            //ViewBag.Category = new SelectList(categories);
+            viewModel.Products = products;
+
+            //return View(products.ToList());
+            return View(viewModel);
         }
 
         // GET: Products/Details/5
@@ -133,5 +166,6 @@ namespace BabyStore.Controllers
             }
             base.Dispose(disposing);
         }
+        
     }
 }
