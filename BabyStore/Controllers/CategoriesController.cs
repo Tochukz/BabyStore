@@ -113,6 +113,10 @@ namespace BabyStore.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Category category = db.Categories.Find(id);
+            foreach(Product product in category.Products)
+            {
+                product.CategoryID = null;
+            }
             db.Categories.Remove(category);
             db.SaveChanges();
             return RedirectToAction("Index");
