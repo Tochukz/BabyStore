@@ -17,7 +17,7 @@ namespace BabyStore.Controllers
         private StoreContext db = new StoreContext();
 
         // GET: Products
-        public ActionResult Index(string category, string search)
+        public ActionResult Index(string category, string search, string sortby)
         {
             ProductIndexViewModel viewModel = new ProductIndexViewModel();
             var products = db.Products.Include(p => p.Category);                   
@@ -51,9 +51,27 @@ namespace BabyStore.Controllers
             {
                 products = products.Where(p => p.Category.Name == category);
             }
+           
+            switch(sortby)
+            {
+                case "lowest_price":
+                    products = products.OrderBy(p => p.Price);
+                    break;
+                case "highest_price":
+                    products = products.OrderByDescending(p => p.Price);
+                    break;
+                default:
+                    break;
+            }
 
             //ViewBag.Category = new SelectList(categories);
             viewModel.Products = products;
+            
+            viewModel.Sorts = new Dictionary<string, string>
+            {
+                { "Highest Price", "highest_price"},
+                {  "Lowest Price" , "lowest_price"}
+            };
 
             //return View(products.ToList());
             return View(viewModel);

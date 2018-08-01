@@ -16,9 +16,12 @@
             <label>Fillter by category:</label>
             @*Html.DropDownList("Category", "All")*@
             @Html.DropDownListFor(vm => vm.Category, Model.CatFilterItems, "All")
+
+            <label>Sort By:</label>
+            @Html.DropDownListFor(vm => vm.SortBy, new SelectList(Model.Sorts, "Value", "Key"), "Default")
+            <input type="submit" value="Filter" />
+            <input type="hidden" name="search" id="search" value="@Model.Search" /> @*ViewBag.Search*@
         </div>
-        <input type="submit" value="Filter" />
-        <input type="hidden" name="search" id="search" value="@Model.Search" /> @*ViewBag.Search*@
     }
 </p>
 <table class="table">

@@ -14,6 +14,10 @@ namespace BabyStore.ViewModels
         public IEnumerable<CategoryWithCount> CatsWithCount { set; get; }
         //To be used as the name of the select control.
         public string Category { set; get; }
+        //TO be used as the name of the select element.
+        public string SortBy { set; get; } 
+        //To be used to populate the select element.
+        public Dictionary<string, string> Sorts { set; get; }
         public IEnumerable<SelectListItem> CatFilterItems
         {
             get
