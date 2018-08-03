@@ -27,9 +27,13 @@
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                     -->
                     <li>@Html.ActionLink("Shop By Category", "Index", "Categories")</li>
-                    <li>@Html.ActionLink("See All Products", "Index", "Products")</li>
-                </ul>     
-                @using(Html.BeginForm("Index", "Products", FormMethod.Get, new { @class = "navbar-form navbar-left"})){
+                    <!--<li>@Html.ActionLink("See All Products", "Index", "Products")</li>-->
+                    <li>@Html.RouteLink("See All Products", "ProductsIndex")</li>
+                    <li>@Html.RouteLink("See Clothes Only", "ProductsbyCategory", new { category = "clothes" })</li>
+                </ul>
+                @*using(Html.BeginForm("Index", "Products", FormMethod.Get, new { @class = "navbar-form navbar-left"}))*@
+                @using (Html.BeginRouteForm("ProductsIndex", FormMethod.Get, new {  @class = "navbar-form nabar-let" }))
+                {
                    <div class="form-group">
                        @Html.TextBox("search", null, new { @class = "form-control", @placeholder = "Search here"})
                    </div>

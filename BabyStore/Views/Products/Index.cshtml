@@ -1,19 +1,21 @@
 ﻿@*model IEnumerable<BabyStore.Models.Product>*@
 @model BabyStore.ViewModels.ProductIndexViewModel
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "Index";
 }
-
 <h2>Index</h2>
-
+<p>
+    @(String.IsNullOrWhiteSpace(Model.Search) ? "Showing all" : "You searched for " + Model.Search + " found" ) @Model.Products.TotalItemCount products
+</p>
 <p>
     @Html.ActionLink("Create New", "Create")
 
-    @using (Html.BeginForm("Index", "Products", FormMethod.Get))
-    {
+    @*using(Html.BeginForm("Index", "Products", FormMethod.Get))*@
+    @using (Html.BeginRouteForm("ProductsIndex", FormMethod.Get)){
         <div class="form-group">
-            <label>Fillter by category:</label>
+            <label>Filter by category:</label>
             @*Html.DropDownList("Category", "All")*@
             @Html.DropDownListFor(vm => vm.Category, Model.CatFilterItems, "All")
 
@@ -68,3 +70,9 @@
 }
 
 </table>
+
+<!--The PagedList Navigation Control-->
+<div>
+    Page @(Model.Products.PageCount < Model.Products.PageNumber? 0 : Model.Products.PageNumber) of @Model.Products.PageCount
+    @Html.PagedListPager(Model.Products, page => Url.Action("Index", new { category = Model.Category, Search = Model.Search, sortBy = Model.SortBy, page }))
+</div>

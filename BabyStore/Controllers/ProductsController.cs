@@ -9,7 +9,7 @@ using System.Web.Mvc;
 using BabyStore.DAL;
 using BabyStore.Models;
 using BabyStore.ViewModels;
-
+using PagedList;
 namespace BabyStore.Controllers
 {
     public class ProductsController : Controller
@@ -17,7 +17,7 @@ namespace BabyStore.Controllers
         private StoreContext db = new StoreContext();
 
         // GET: Products
-        public ActionResult Index(string category, string search, string sortby)
+        public ActionResult Index(string category, string search, string sortby, int? page)
         {
             ProductIndexViewModel viewModel = new ProductIndexViewModel();
             var products = db.Products.Include(p => p.Category);                   
@@ -50,6 +50,7 @@ namespace BabyStore.Controllers
             if (!String.IsNullOrEmpty(category))
             {
                 products = products.Where(p => p.Category.Name == category);
+                viewModel.Category = category;
             }
            
             switch(sortby)
@@ -61,12 +62,17 @@ namespace BabyStore.Controllers
                     products = products.OrderByDescending(p => p.Price);
                     break;
                 default:
+                    products = products.OrderBy(p => p.Name); //Because PagedLIst requires the list it receives to be sorted.
                     break;
             }
 
             //ViewBag.Category = new SelectList(categories);
-            viewModel.Products = products;
-            
+            //viewModel.Products = products;
+
+            const int itemsPerPage = 3;
+            int currentPage = (page ?? 1);
+            viewModel.Products = products.ToPagedList(currentPage, itemsPerPage);
+            viewModel.SortBy = sortby;
             viewModel.Sorts = new Dictionary<string, string>
             {
                 { "Highest Price", "highest_price"},
