@@ -68,10 +68,9 @@ namespace BabyStore.Controllers
 
             //ViewBag.Category = new SelectList(categories);
             //viewModel.Products = products;
-
-            const int itemsPerPage = 3;
-            int currentPage = (page ?? 1);
-            viewModel.Products = products.ToPagedList(currentPage, itemsPerPage);
+           
+            int currentPage = (page ?? 1);   
+            viewModel.Products = products.ToPagedList(currentPage, Constants.ItemsPerPage);
             viewModel.SortBy = sortby;
             viewModel.Sorts = new Dictionary<string, string>
             {
