@@ -11,6 +11,7 @@ using BabyStore.Models;
 using System.Web.Helpers;
 using System.Data.SqlClient;
 using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 
 namespace BabyStore.Controllers
 {
@@ -54,6 +55,8 @@ namespace BabyStore.Controllers
         {
             bool allValid = true;
             string inValidFiles = "";
+            //Logging sql statement
+            //db.Database.Log = sql => Trace.WriteLine(sql);
             if(files[0] != null)
             {
                 if(files.Length <= 10)
@@ -111,6 +114,7 @@ namespace BabyStore.Controllers
                     {                        
                         db.ProductsImages.Add(productToAdd);
                         db.SaveChanges();
+                        //When working with very large upload it better to call saveChanges only once on the DB context after all items have been added.
                     }
                     catch(DbUpdateException ex)
                     {
