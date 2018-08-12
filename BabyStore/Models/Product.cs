@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic; 
+
 namespace BabyStore.Models
 {
     public partial class Product
@@ -25,5 +27,7 @@ namespace BabyStore.Models
 
         public int? CategoryID { set; get; }
         public virtual Category Category { set; get; }
+
+        public virtual ICollection<ProductImageMapping> ProductImageMappings { set; get; }
     }
 }
