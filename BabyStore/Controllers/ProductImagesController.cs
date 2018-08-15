@@ -22,7 +22,7 @@ namespace BabyStore.Controllers
         // GET: ProductImages
         public ActionResult Index()
         {
-            return View(db.ProductsImages.ToList());
+            return View(db.ProductImages.ToList());
         }
 
         // GET: ProductImages/Details/5
@@ -32,7 +32,7 @@ namespace BabyStore.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ProductImage productImage = db.ProductsImages.Find(id);
+            ProductImage productImage = db.ProductImages.Find(id);
             if (productImage == null)
             {
                 return HttpNotFound();
@@ -112,7 +112,7 @@ namespace BabyStore.Controllers
                     ProductImage productToAdd = new ProductImage { FileName = file.FileName };
                     try
                     {                        
-                        db.ProductsImages.Add(productToAdd);
+                        db.ProductImages.Add(productToAdd);
                         db.SaveChanges();
                         //When working with very large upload it better to call saveChanges only once on the DB context after all items have been added.
                     }
@@ -156,7 +156,7 @@ namespace BabyStore.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ProductImage productImage = db.ProductsImages.Find(id);
+            ProductImage productImage = db.ProductImages.Find(id);
             if (productImage == null)
             {
                 return HttpNotFound();
@@ -187,7 +187,7 @@ namespace BabyStore.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ProductImage productImage = db.ProductsImages.Find(id);
+            ProductImage productImage = db.ProductImages.Find(id);
             if (productImage == null)
             {
                 return HttpNotFound();
@@ -200,8 +200,8 @@ namespace BabyStore.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            ProductImage productImage = db.ProductsImages.Find(id);
-            db.ProductsImages.Remove(productImage);
+            ProductImage productImage = db.ProductImages.Find(id);
+            db.ProductImages.Remove(productImage);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
