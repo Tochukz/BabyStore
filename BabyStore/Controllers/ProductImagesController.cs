@@ -201,6 +201,26 @@ namespace BabyStore.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             ProductImage productImage = db.ProductImages.Find(id);
+            //find all the mapping for this image
+            var mappings = productImage.ProductImageMappings.Where(pim => pim.ProductImageID == id);
+            foreach(var mapping in mappings)
+            {
+                //find mappings for any  product containing this image
+                var mappingsToUpdate = db.ProductImageMappings.Where(pim => pim.ProductID == mapping.ProductID);
+                //for eah  image  ineach product change its imagenumber to one lower if it is higher than the current image
+                foreach(var mappingToUpdate in mappingsToUpdate)
+                {
+                    if(mappingToUpdate.ImageNumber > mapping.ImageNumber)
+                    {
+                        mappingToUpdate.ImageNumber--;
+                    }
+                }
+             }
+
+            //We refer to theclass System.IO.File directly ecause the ontroller also contansa property called File.
+            //We use Request.MapPath to ensure that the correct server path is used.
+            System.IO.File.Delete(Request.MapPath(Constants.ProductImagePath + productImage.FileName));
+            System.IO.File.Delete(Request.MapPath(Constants.ProductThumbnailPath + productImage.FileName));
             db.ProductImages.Remove(productImage);
             db.SaveChanges();
             return RedirectToAction("Index");
